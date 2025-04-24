@@ -12,17 +12,17 @@ movies_df["genres"] = movies_df["genres"].fillna("")
 tfidf = TfidfVectorizer(token_pattern=f"[^|+]")
 tfidf_matrix=tfidf.fit_transform(movies_df["genres"])
 
-sim_cosine=cosine_similarity(tfidf_matrix,tfidf_matrix)
+cos_symulacja=cosine_similarity(tfidf_matrix,tfidf_matrix)
 
-def suggested_movie(nazwa, top_n=5):
+def suggested_movie(nazwa, top_n=7):
     match=movies_df[movies_df["title"].str.lower()==nazwa.lower()]
     if match.empty:
         return "Nie znaleziono"
     idx = match.index[0]
-    sim_scores = list(enumerate(sim_cosine[idx]))
-    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
-    sim_scores = [score for score in sim_scores if score[0] != idx]
-    sim_scores = sim_scores[:top_n]
-    movie_indices = [i[0] for i in sim_scores]
+    wynik_sym = list(enumerate(cos_symulacja[idx]))
+    wynik_sym = sorted(wynik_sym, key=lambda x: x[1], reverse=True)
+    wynik_sym = [wynik for wynik in wynik_sym if wynik[0] != idx]
+    wynik_sym = wynik_sym[:top_n]
+    movie_indices = [i[0] for i in wynik_sym]
     return movies_df[["title", "genres"]].iloc[movie_indices]
-print(suggested_movie("Ace Ventura: When Nature Calls (1995)"))
+#print(suggested_movie("Waiting to Exhale (1995)"))
